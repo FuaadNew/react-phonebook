@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
-
+import personService from './services/Persons.js'
 
 const Filter = ({filter, setFilter}) => {return (
  <div> Filter Shown with: <input onChange={(e)=>{setFilter(e.target.value)
@@ -13,18 +13,48 @@ const Filter = ({filter, setFilter}) => {return (
 
 const PersonForm = ({newName, setNewName, newNumber,setNewNumber, persons, setPersons }) =>{
 
+
   const addPerson = (event)=>{
+   
+    
     event.preventDefault()
     const nameSet = new Set(persons.map(person=>person.name))
+
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+     
+    }
     
-    if (nameSet.has(newName)){
+    if (nameSet.has(newName) && nameSet.has(newNumber) ){
       alert(`${newName } is already added to the phonebook`)
       return
 
-    } 
-    setPersons([...persons,{name:newName, number:newNumber, id:persons.length+1}])
-      setNewName('')
-      setNewNumber('')
+    }else if (nameSet.has(newName) &&  !nameSet.has(newNumber) ){
+      const personToUpdate = persons.find(person => person.name === newName)
+
+      if (window.confirm(`${newName } is already added to phonebook, replace the old number with a new one? `)){
+        personService.changeNumber(personToUpdate.id,newPerson).then(response =>{
+          setPersons(persons.map(person => person.id === personToUpdate.id ? {...person,number:newNumber}:person))
+          setNewName('')
+          setNewNumber('')
+
+        })
+      }
+    }
+    
+
+      
+    
+    personService.create(newPerson).then(response => {
+        setPersons(persons.concat(response))
+        setNewName('')
+        setNewNumber('')
+
+
+
+
+      })
 
 }
   return (
@@ -38,19 +68,35 @@ const PersonForm = ({newName, setNewName, newNumber,setNewNumber, persons, setPe
 
 }
 
-const Numbers = ({persons, filter}) =>{
-  const dynamicFilter = persons.filter(person=> person.name.toLowerCase().includes(filter.toLowerCase()))
+const Numbers = ({persons, filter, setPersons}) =>{
+  const dynamicFilter = persons.filter((person) =>
+    person.name.toLowerCase().includes(filter.toLowerCase())
+  );
+  const handleDelete = (id,name) => {
+    if (window.confirm(`Do you really want to delete ${name}?`)) {
+    personService.deletePerson(id).then(()=>{
+      setPersons(persons.filter(person => person.id !== id))
+      
+    })
 
-  return ( <div>{dynamicFilter.map((person)=><p key = {person.id}>{person.name} {person.number}</p>)}</div>)
+  }
+  
+  
+  }
+
+  
+  return ( <div>{dynamicFilter.map((person)=><p key = {person.id}>{person.name} {person.number} <button onClick={()=>handleDelete(person.id, person.name) }>Delete</button></p>)}</div>)
 
 }
+
+
 
 
 const App = () =>{
   const [persons,setPersons] = useState([])
   useEffect( ()=>{
-    axios.get('http://localhost:3001/persons').then(response =>{
-      setPersons(response.data)
+    personService.GetAll().then(response =>{
+      setPersons(response)
     })
   },[])
 
@@ -79,7 +125,7 @@ const App = () =>{
   
 
     <h3>Numbers</h3>
-    <Numbers persons={persons} filter ={filter}></Numbers>
+    <Numbers persons={persons} filter ={filter} setPersons={setPersons}></Numbers>
 
     
       
