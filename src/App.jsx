@@ -2,6 +2,21 @@ import {useState, useEffect} from 'react'
 import axios from 'axios'
 import personService from './services/Persons.js'
 
+const Notifcation = ({message}) =>{
+
+  const NotifcationStyle = {
+    color: 'green',
+    fontStyle: 'italic',
+    fontSize: 16
+  }
+  if (message === null){
+    return null
+  }
+  return <div style={NotifcationStyle}>
+    <p>{`${message} was added`}</p>
+  </div>
+}
+
 const Filter = ({filter, setFilter}) => {return (
  <div> Filter Shown with: <input onChange={(e)=>{setFilter(e.target.value)
     console.log({filter})}}></input>
@@ -11,7 +26,7 @@ const Filter = ({filter, setFilter}) => {return (
 
 
 
-const PersonForm = ({newName, setNewName, newNumber,setNewNumber, persons, setPersons }) =>{
+const PersonForm = ({newName, setNewName, newNumber,setNewNumber, persons, setPersons,setNotificationMessage }) =>{
 
 
   const addPerson = (event)=>{
@@ -38,6 +53,8 @@ const PersonForm = ({newName, setNewName, newNumber,setNewNumber, persons, setPe
           setPersons(persons.map(person => person.id === personToUpdate.id ? {...person,number:newNumber}:person))
           setNewName('')
           setNewNumber('')
+          setNotificationMessage(`Updated ${newName}'s number`)
+          setTimeout(()=>setNotificationMessage(null),5000)
 
         })
       }
@@ -50,6 +67,9 @@ const PersonForm = ({newName, setNewName, newNumber,setNewNumber, persons, setPe
         setPersons(persons.concat(response))
         setNewName('')
         setNewNumber('')
+        setNotificationMessage(`${newName} was added`)
+        setTimeout(()=>setNotificationMessage(null),5000)
+
 
 
 
@@ -106,6 +126,7 @@ const App = () =>{
   const [newName,setNewName] = useState('')
   const [newNumber,setNewNumber] = useState('')
   const [filter,setFilter] = useState('')
+  const [notificationMessage,setNotificationMessage] = useState(null)
 
 
     
@@ -114,10 +135,11 @@ const App = () =>{
  
 
   return( <div>
+    <Notifcation message = {notificationMessage}></Notifcation>
     <h2>PhoneBook</h2>
     <Filter setFilter={setFilter} filter={filter}></Filter>
     <h3>Add a new</h3>
-    <PersonForm newName = {newName} setNewName = {setNewName} newNumber = {newNumber} setNewNumber = {setNewNumber} persons={persons} setPersons = {setPersons} ></PersonForm>
+    <PersonForm newName = {newName} setNewName = {setNewName} newNumber = {newNumber} setNewNumber = {setNewNumber} persons={persons} setPersons = {setPersons} setNotificationMessage = {setNotificationMessage}></PersonForm>
  
 
 
