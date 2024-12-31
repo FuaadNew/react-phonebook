@@ -56,6 +56,9 @@ const PersonForm = ({newName, setNewName, newNumber,setNewNumber, persons, setPe
           setNotificationMessage(`Updated ${newName}'s number`)
           setTimeout(()=>setNotificationMessage(null),5000)
 
+        }).catch(error => {
+          setNotificationMessage(`Information of ${newPerson.name} has already been removed from the server. `)
+          setTimeout(()=>setNotificationMessage(null),5000)
         })
       }
     }
