@@ -93,12 +93,12 @@ const PersonForm = ({newName, setNewName, newNumber,setNewNumber, persons, setPe
 
 const Numbers = ({persons, filter, setPersons}) =>{
   const dynamicFilter = persons.filter((person) =>
-    person.name.toLowerCase().includes(filter.toLowerCase())
+    person.name && person.name.toLowerCase().includes(filter.toLowerCase())
   );
   const handleDelete = (id,name) => {
     if (window.confirm(`Do you really want to delete ${name}?`)) {
     personService.deletePerson(id).then(()=>{
-      setPersons(persons.filter(person => person.id !== id))
+      setPersons(prevPersons => prevPersons.filter(person => person.id !== id))
       
     })
 
@@ -106,6 +106,8 @@ const Numbers = ({persons, filter, setPersons}) =>{
   
   
   }
+
+  
 
   
   return ( <div>{dynamicFilter.map((person)=><p key = {person.id}>{person.name} {person.number} <button onClick={()=>handleDelete(person.id, person.name) }>Delete</button></p>)}</div>)
