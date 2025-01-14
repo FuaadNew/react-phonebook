@@ -14,6 +14,12 @@ const create = (newPerson) => {
 
 }
 
+const update = (newPerson) => {
+    const request = axios.put(baseurl,newPerson)
+    return request.then(response=> response.data)
+
+}
+
 
 
 const deletePerson = (id) => {
@@ -30,4 +36,4 @@ const changeNumber = (id,newPerson) => {
 }
 
 
-export default {GetAll, create,deletePerson, changeNumber}
+export default {GetAll, create,deletePerson, changeNumber, update}

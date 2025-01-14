@@ -56,28 +56,32 @@ const PersonForm = ({newName, setNewName, newNumber,setNewNumber, persons, setPe
           setNotificationMessage(`Updated ${newName}'s number`)
           setTimeout(()=>setNotificationMessage(null),5000)
 
+
+          personService.update(newPerson).then(response => {
+            setPersons(persons.concat(response))
+            setNewName('')
+            setNewNumber('')
+            setNotificationMessage(`${newName} was added`)
+            setTimeout(()=>setNotificationMessage(null),5000)
+    
+    
+    
+    
+    
+          })
+
         }).catch(error => {
-          setNotificationMessage(`Information of ${newPerson.name} has already been removed from the server. `)
+          setNotificationMessage(`Validation Error`)
           setTimeout(()=>setNotificationMessage(null),5000)
         })
       }
+
     }
     
 
       
     
-    personService.create(newPerson).then(response => {
-        setPersons(persons.concat(response))
-        setNewName('')
-        setNewNumber('')
-        setNotificationMessage(`${newName} was added`)
-        setTimeout(()=>setNotificationMessage(null),5000)
-
-
-
-
-
-      })
+    
 
 }
   return (
