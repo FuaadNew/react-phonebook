@@ -1,27 +1,34 @@
 import { useState } from 'react'
 
 
-const Numbers = ({persons}) =>{
+const Persons = ({persons, newFilter}) =>{
+  const filteredPerson = persons.filter(person => 
+    person.name.toLowerCase().includes(newFilter.toLowerCase()))
   
   return (
     <>
-      {persons.map (person => <p key = {person.name}> {person.name} {person.number}</p>)}
+      
+      {filteredPerson.map(person => <p key = {person.name}> {person.name} {person.number}</p>)}
     </>
     
   )
 }
 
+const Filter = ({newFilter, setNewFilter}) =>{
 
+  const filterList = (event) =>{
+    setNewFilter(event.target.value)
+  }
 
-const App = () => {
- 
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas',
-      number: '040-1234567'
-     }
-  ]) 
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
+  return (
+    <div>
+      <div> filter shown with <input type="text" value = {newFilter} onChange={filterList} /> </div>
+
+    </div>
+  )
+}
+
+const PersonForm = ({persons, setPersons, newName, setNewName, newNumber, setNewNumber}) => {
 
 
   const handleNameChange = (event) =>{
@@ -35,7 +42,6 @@ const App = () => {
 
 
   }
-
 
   const addPerson = (event) =>{
 
@@ -69,26 +75,65 @@ const App = () => {
   }
 
   return (
+    <form onSubmit={addPerson}>
+        
+    <div>
+      name: <input
+      placeholder='' 
+      value = {newName}
+      onChange = {handleNameChange}
+      />
+      <div>
+        number: <input placeholder='' value = {newNumber} onChange={handleNumberChange}/>
+       
+      </div>
+    </div>
+    <div>
+      <button type="submit">add</button>
+    </div>
+  </form>
+  )
+
+}
+
+
+
+const App = () => {
+  
+
+  const [persons, setPersons] = useState([
+    { name: 'Arto Hellas',
+      number: '040-1234567'
+     }
+  ]) 
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [newFilter, setNewFilter] = useState('')
+
+
+
+
+ 
+
+  return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input
-          placeholder='' 
-          value = {newName}
-          onChange = {handleNameChange}
-          />
-          <div>
-            number: <input placeholder='' value = {newNumber} onChange={handleNumberChange}/>
-           
-          </div>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      
+
+      <Filter newFilter = {newFilter} setNewFilter={setNewFilter}></Filter>
+
+      <h3>Add a new</h3>
+
+      <PersonForm persons = {persons} setPersons = {setPersons} newName={newName} setNewName={setNewName} newNumber = {newNumber} setNewNumber={setNewNumber}></PersonForm>
+
+     
+      
+
+
+      
+   
       <h2>Numbers</h2>
-      <Numbers persons={persons}></Numbers>
+      <Persons persons={persons} newFilter={newFilter}></Persons>
       
     
     </div>
