@@ -2,6 +2,21 @@ import { useState, useEffect} from 'react'
 import personService from './services/Persons'
 
 
+const Notification = ({style, message}) =>{
+  const NotificationStyle = {
+    display: `${style}`,
+    backgroundColor: 'lightgrey',
+    border: '1px solid green',
+    borderRadius: '5px',
+    padding: '10px',
+    marginBottom: '10px'
+
+  }
+  return (
+    <div style={NotificationStyle}> {message}</div>
+  )
+}
+
 const DeleteButton = ({onClick}) =>{
   return( <button onClick={onClick}>Delete</button>)
 
@@ -36,7 +51,7 @@ const Filter = ({newFilter, setNewFilter}) =>{
   )
 }
 
-const PersonForm = ({persons, setPersons, newName, setNewName, newNumber, setNewNumber}) => {
+const PersonForm = ({persons, setPersons, newName, setNewName, newNumber, setNewNumber, setNotificationStyle}) => {
 
 
   const handleNameChange = (event) =>{
@@ -85,12 +100,14 @@ const PersonForm = ({persons, setPersons, newName, setNewName, newNumber, setNew
     
     if (newPerson.name !== ''){
       personService.create(newPerson).then(response => {
+     
     setPersons(persons.concat(response.data))
     console.log(newPerson)
     setNewName('')
     setNewNumber('')
-
-    })
+    setNotificationStyle({style:'block', message: `Added ${newPerson.name}`})
+    setTimeout(()=>{setNotificationStyle({style:'none', message: ''})},5000)
+      })
 
 
     
@@ -154,7 +171,7 @@ const App = () => {
   
 
   
-
+  const [notificationStyle, setNotificationStyle] = useState({style:'None', name: ''})
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
@@ -169,13 +186,15 @@ const App = () => {
     <div>
       
       <h2>Phonebook</h2>
+
+      <Notification style ={notificationStyle.style} message ={notificationStyle.message}> </Notification>
       
 
       <Filter newFilter = {newFilter} setNewFilter={setNewFilter}></Filter>
 
       <h3>Add a new</h3>
 
-      <PersonForm persons = {persons} setPersons = {setPersons} newName={newName} setNewName={setNewName} newNumber = {newNumber} setNewNumber={setNewNumber}></PersonForm>
+      <PersonForm persons = {persons} setPersons = {setPersons} newName={newName} setNewName={setNewName} newNumber = {newNumber} setNewNumber={setNewNumber} setNotificationStyle={setNotificationStyle}></PersonForm>
 
      
       
