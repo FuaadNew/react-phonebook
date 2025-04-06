@@ -152,6 +152,13 @@ const App = () => {
     if (window.confirm("Delete this person?")){
       personService.deletePerson(id).then(()=>{
         setPersons(persons.filter(person => person.id !== id))
+      }).catch(error => {
+        const person = persons.filter(person => person.id == id)
+        console.log(error)
+        console.log(person)
+        setNotificationStyle({style:'block', message: `${person[0].name} has already been deleted from the phone book`})
+        setTimeout(()=>{setNotificationStyle({style:'none', message: ''})},5000)
+          
       })
 
       }
