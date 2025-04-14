@@ -9,31 +9,26 @@ const GetAll = () =>{
 }
 
 const create = (newPerson) => {
-    const request = axios.post(baseurl,newPerson)
+    const request = axios.post(baseurl, newPerson)
+    console.log('Creating new person:', newPerson)
     return request.then(response=> response.data)
-
 }
 
-const update = (newPerson) => {
-    const request = axios.put(baseurl,newPerson)
+const update = (updatedPerson) => {
+    const request = axios.put(`${baseurl}/${updatedPerson.id}`, updatedPerson)
+    console.log('Updating person with ID:', updatedPerson.id)
+    console.log('Update data:', updatedPerson)
     return request.then(response=> response.data)
-
 }
 
-
+const changeNumber = (id, updatedPerson) => {
+    const request = axios.put(`${baseurl}/${id}`, updatedPerson)
+    return request.then(response=> response.data)
+}
 
 const deletePerson = (id) => {
     const request = axios.delete(`${baseurl}/${id}`)
-    return request.then(response=> response.data)
-    
-
+    return request.then(response => response.data)
 }
 
-const changeNumber = (id,newPerson) => {
-    const request = axios.put(`${baseurl}/${id}`,newPerson)
-    return request.then(response=> response.data)
-    
-}
-
-
-export default {GetAll, create,deletePerson, changeNumber, update}
+export default { GetAll, create, update, changeNumber, deletePerson }

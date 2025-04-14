@@ -34,6 +34,7 @@ const PersonForm = ({newName, setNewName, newNumber,setNewNumber, persons, setPe
     
     event.preventDefault()
     const nameSet = new Set(persons.map(person=>person.name))
+    const numberSet = new Set(persons.map(person=>person.number))
 
     const newPerson = {
       name: newName,
@@ -41,11 +42,13 @@ const PersonForm = ({newName, setNewName, newNumber,setNewNumber, persons, setPe
      
     }
     
-    if (nameSet.has(newName) && nameSet.has(newNumber) ){
+    if (nameSet.has(newName) && numberSet.has(newNumber) ){
       alert(`${newName } is already added to the phonebook`)
+    
       return
 
-    }else if (nameSet.has(newName) &&  !nameSet.has(newNumber) ){
+    }else if (nameSet.has(newName) &&  !numberSet.has(newNumber) ){
+     
       const personToUpdate = persons.find(person => person.name === newName)
 
       if (window.confirm(`${newName } is already added to phonebook, replace the old number with a new one? `)){
@@ -57,25 +60,44 @@ const PersonForm = ({newName, setNewName, newNumber,setNewNumber, persons, setPe
           setTimeout(()=>setNotificationMessage(null),5000)
 
 
-          personService.update(newPerson).then(response => {
-            setPersons(persons.concat(response))
-            setNewName('')
-            setNewNumber('')
-            setNotificationMessage(`${newName} was added`)
-            setTimeout(()=>setNotificationMessage(null),5000)
+          
     
     
     
     
     
-          })
+          
 
         }).catch(error => {
-          setNotificationMessage(`Validation Error`)
+          console.log(error)
+          setNotificationMessage(`Information of ${newPerson.name} has already been removed from the server. `)
           setTimeout(()=>setNotificationMessage(null),5000)
         })
       }
+       
+    } else {
+      console.log("TEST")
+      console.log(newPerson)
+      personService.create(newPerson).then(response => {
+       
+        setPersons(persons.concat(response))
+        setNewName('')
+        setNewNumber('')
+        setNotificationMessage(`${newName} was added`)
+        setTimeout(()=>setNotificationMessage(null),5000)
 
+
+
+
+
+      }).catch(error =>{
+       setNotificationMessage(error.response.data.error)
+       setTimeout(()=>setNotificationMessage(null),5000)
+
+
+
+      })
+      
     }
     
 
