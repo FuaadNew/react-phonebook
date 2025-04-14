@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "name": "reactphonebook",
+=======
+  "name": "react-phonebook",
+>>>>>>> 3baa03b439d05e4252a362602488cb4188c3b0dc
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,6 +12,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+<<<<<<< HEAD
     "server": "json-server -p3001 --watch db.json"
   },
   "dependencies": {
@@ -27,5 +32,25 @@
     "globals": "^15.14.0",
     "json-server": "^1.0.0-beta.3",
     "vite": "^6.0.5"
+=======
+    "server": "json-server -p 3001 db.json"
+  },
+  "dependencies": {
+    "axios": "^1.8.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.21.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^15.15.0",
+    "json-server": "^1.0.0-beta.3",
+    "vite": "^6.2.0"
+>>>>>>> 3baa03b439d05e4252a362602488cb4188c3b0dc
   }
 }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import axios from "axios";
 
 const baseurl ='http://localhost:3001/api/persons'
@@ -32,3 +33,27 @@ const deletePerson = (id) => {
 }
 
 export default { GetAll, create, update, changeNumber, deletePerson }
+=======
+import axios from 'axios'
+
+const baseUrl = 'http://localhost:3001/api/persons'
+
+
+const getAll = () =>{
+    return axios.get(baseUrl).then(response=>response.data)
+}
+
+const create = newObject =>{
+    return axios.post(baseUrl,newObject)
+}
+
+const deletePerson = id =>{
+    return axios.delete(`${baseUrl}/${id}`)
+}
+
+const update = (id,updatedPerson)=>{
+    return axios.put(`${baseUrl}/${id}`, updatedPerson)
+}
+
+export default {getAll, create, deletePerson, update}
+>>>>>>> 3baa03b439d05e4252a362602488cb4188c3b0dc
